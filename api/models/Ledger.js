@@ -27,7 +27,7 @@ module.exports = {
       },
       
       // related invoice's Id
-      invoiceId {
+      invoiceId : {
           type : 'string'
       },
       
