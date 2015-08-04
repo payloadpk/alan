@@ -1,0 +1,7 @@
+NODE_ENV="development"
+POSTGRE_DB="alan"
+POSTGRE_HOST="localhost"
+POSTGRE_PASS="secretpassword"
+POSTGRE_USER="alan"
+REDIS_URL="redis://user:pass@localhost:6379"
+SECRET="secret"
