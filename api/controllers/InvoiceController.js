@@ -5,7 +5,35 @@
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
 
-module.exports = {
-	
-};
+var coinbase = require('../config/coinbase');
+var redis = require('../config/redis');
 
+
+module.exports = {
+    new : function (req, res) {
+        var amount;
+
+        if (!req.body.price && !req.body.currency) {
+            res.json({
+                success: false,
+                error: "Price and currency required"
+            });
+        }
+
+				amount = parseInt(req.body.price) / (redis.get('ratePKR'));
+
+				btcAccount.createAddress({
+						"callback_url": '',
+						"label": "first blood"
+					}, function(err, newbtcaddress) {
+						if (err) console.log(err);
+
+						// the response
+						res.json({
+						'amount' : amount,
+						'address': newbtcaddress.address,
+						})
+
+					});
+    }
+};
