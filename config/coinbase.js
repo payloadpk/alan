@@ -12,3 +12,4 @@ Account = require('coinbase').model.Account,
     'id': process.env.COINBASE_API_WALLET
   }),
 
+module.exports.coinbase=btcAccount;
