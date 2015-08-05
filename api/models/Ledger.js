@@ -8,39 +8,39 @@
 module.exports = {
 
   attributes: {
-      
+
       // entry code, e.g. fees, sales, exchange, etc.
       type : {
           type : 'number',
           required : true
       },
-      
+
       // amount in bitcoin
       amount : {
           type : 'number',
           required : true
       },
-      
+
       // entry description
       description : {
           type : 'string',
       },
-      
+
       // related invoice's Id
-      invoiceId {
+      invoiceId : {
           type : 'string'
       },
-      
+
       // related invoice's amount in fiat/currency
       invoiceAmount : {
           type: 'number'
       },
-      
+
       // related invoice's currency code
       invoiceCurrency : {
           type: 'string'
       },
-      
+
       // the exchange rate for the invoice
       exRate : {
           type : 'number'
@@ -48,4 +48,3 @@ module.exports = {
 
   }
 };
-
