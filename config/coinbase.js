@@ -7,7 +7,7 @@ var coinbaseParams = {
 };
 var coinbase = new Coinbase(coinbaseParams);
 
-var Account = require('coinbase').model.Accoun;
+var Account = require('coinbase').model.Account;
 var btcAccount = new Account(coinbase, {
   'id': process.env.COINBASE_API_WALLET
 });
