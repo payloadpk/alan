@@ -1,5 +1,5 @@
 var Pusher = require('pusher-client');
-var redis = require('../config/redis');
+var redis = require('../config/redis.js').redis;
 
 // connect to Bitstamp's pusher
 var pusherBitstamp = new Pusher('de504dc5763aeef9ff52');

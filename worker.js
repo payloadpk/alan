@@ -1,4 +1,5 @@
 var market = require('./worker/market.js');
 
-// run the continuous rate
+
+// push continuous rate updates to redis
 market.contRate();
