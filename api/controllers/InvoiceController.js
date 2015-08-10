@@ -5,8 +5,8 @@
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
 
-var coinbase = require('../config/coinbase');
-var redis = require('../config/redis');
+var coinbase = sails.config.coinbase;
+var redis = sails.config.redis;
 
 
 module.exports = {
