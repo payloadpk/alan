@@ -1,5 +1,6 @@
 var Pusher = require('pusher-client');
-var redis = require('../config/redis.js').redis;
+var redis = sails.config.redis;
+var log = sails.log;
 
 // connect to Bitstamp's pusher
 var pusherBitstamp = new Pusher('de504dc5763aeef9ff52');
@@ -22,9 +23,9 @@ module.exports.contRate = function() {
 
     wBTC = valBTC / volBTC;
 
-    console.log("cumulative volume of bitcoin", volBTC);
-    console.log("value of bitcoin in USD", valBTC);
-    console.log("value per bitcoin", wBTC);
+    log("cumulative volume of bitcoin", volBTC);
+    log("value of bitcoin in USD", valBTC);
+    log("value per bitcoin", wBTC);
 
     redis.set("rateUSD", wBTC);
 
