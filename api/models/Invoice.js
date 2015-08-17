@@ -8,17 +8,54 @@
 module.exports = {
 
   attributes: {
-    // required fields
+    /*
+     * Invoice financials
+     */
+
+    // total invoice price
     price: {
-      type: "number",
+      type: "float",
       required: true,
     },
+    // currency of price
     currency: {
       type: "string",
       required: true,
       defaultsTo: "PKR",
       enum: ["PKR", "USD", "BTC"]
     },
+    // units of currency per bitcoin
+    rate: {
+      type: "float",
+      required: "true"
+    },
+    // invoice amount in bitcoin
+    amount: {
+      type: "float",
+      required: true
+    },
+
+    /*
+     * Notification settings
+     */
+
+    // notification settings
+    notificationUrl: {
+      type: "string"
+    },
+    // confirmations required for invoice to be marked as complete, default is 3
+    confirmationSpeed: {
+      type: "integer",
+      defaultsTo: 3
+    },
+    // TODO
+    redirectUrl: {
+      type: "string"
+    },
+
+    /*
+     * Item metadata
+     */
 
     // item description
     itemDesc: {
@@ -26,23 +63,10 @@ module.exports = {
       size: "100"
     },
 
-    // notification settings
-    notificationUrl: {
-      type: "string"
-    },
-    redirectUrl: {
-      type: "string"
-    },
-
-    // confirmations
-    confirmationSpeed: {
-      type: "number"
-    },
-
     // others
     physical: {
       type: "boolean",
-      defaultsTo: "false"
+      defaultsTo: false
     },
 
     // buyer details
@@ -59,7 +83,7 @@ module.exports = {
       type: "string",
     },
     buyerPostelCode: {
-      type: "number",
+      type: "integer",
     },
     buyerCountry: {
       type: "string"
@@ -69,7 +93,7 @@ module.exports = {
       email: true
     },
     buyerPhone: {
-      type: "number"
+      type: "integer"
     },
 
     // status of invoice i.e confirmed
@@ -77,7 +101,7 @@ module.exports = {
       type: "string"
     },
 
-    // exception for paidOver or paidPartial , or false
+    // exception for paidOver or paidPartial, or false
     exception: {
       type: "boolean"
     }
