@@ -8,5 +8,4 @@ module.exports.trans = function(){
     var x = JSON.parse(ev);
     log.silly('New Transaction',x);
   });
-
 };

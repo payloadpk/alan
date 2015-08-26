@@ -1,3 +1,5 @@
+/* global Invoice */
+/* global sails */
 /**
  * InvoiceController
  *
@@ -9,9 +11,8 @@ var coinbase = sails.config.coinbase;
 var redis = sails.config.redis;
 var log = sails.log;
 
-
 module.exports = {
-  new: function(req, res) {
+  new: function (req, res) {
 
     log.silly('recieved a new request', req.body);
 
@@ -34,27 +35,29 @@ module.exports = {
 
     // if no currency is sent, assume it is PKR
     if (!req.body.currency) {
-      req.body.currency = "PKR";
+      req.body.currency = "USD";
     }
 
     var rate;
     // assign rate the value of the currency called
     switch (req.body.currency) {
-      case 'PKR':
-        rate = 'ratePKR';
-        break;
       case 'USD':
         rate = 'rateUSD';
+        break;
+      case 'PKR':
+        rate = 'ratePKR';
         break;
       default:
         rate = 'ratePKR';
     }
 
+    log.silly(rate);
     // get the rate from memory
-    redis.get(rate, function(err, rateCurrent) {
+    redis.get(rate, function (err, rateCurrent) {
       if (err) log.error("rateUSD fetch unsuccessful", err);
       var amount = parseFloat(req.body.price) / rateCurrent;
-
+      log.silly("RATE CURRENT");
+      log.silly(rateCurrent);
       // create an invoice object
       var invoice = {
         "price": parseFloat(req.body.price),
@@ -64,7 +67,7 @@ module.exports = {
       };
 
       // insert the object into the DB
-      Invoice.create(invoice).exec(function(err, created) {
+      Invoice.create(invoice).exec(function (err, created) {
         if (err) {
           // log the error
           log.error(err);

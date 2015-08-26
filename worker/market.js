@@ -1,3 +1,4 @@
+/* global sails */
 var Pusher = require('pusher-client');
 var redis = sails.config.redis;
 var log = sails.log;
@@ -26,7 +27,6 @@ module.exports.contRate = function() {
     log.silly("cumulative volume of bitcoin", volBTC);
     log.silly("value of bitcoin in USD", valBTC);
     log.silly("value per bitcoin", wBTC);
-
     redis.set("rateUSD", wBTC);
 
   });
