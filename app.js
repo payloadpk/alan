@@ -23,7 +23,7 @@
 process.chdir(__dirname);
 
 // Ensure a "sails" can be located:
-(function() {
+(function () {
   var sails;
   try {
     sails = require('sails');
@@ -50,6 +50,7 @@ process.chdir(__dirname);
       console.error('To resolve this, run:');
       console.error('npm install rc --save');
       rc = function () { return {}; };
+      console.er
     }
   }
 

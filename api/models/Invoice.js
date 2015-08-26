@@ -6,7 +6,9 @@
  */
 
 module.exports = {
-
+  connection: 'postgresql',
+  tableName: 'invoice',
+  schema: true,
   attributes: {
     /*
      * Invoice financials
@@ -27,7 +29,7 @@ module.exports = {
     // units of currency per bitcoin
     rate: {
       type: "float",
-      required: "true"
+      required: true
     },
     // invoice amount in bitcoin
     amount: {
