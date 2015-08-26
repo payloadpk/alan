@@ -50,7 +50,6 @@ process.chdir(__dirname);
       console.error('To resolve this, run:');
       console.error('npm install rc --save');
       rc = function () { return {}; };
-      console.er
     }
   }
 
