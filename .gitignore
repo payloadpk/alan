@@ -119,3 +119,4 @@ nbproject
 .env
 *.njsproj
 .ntvs_analysis.dat
+typings
