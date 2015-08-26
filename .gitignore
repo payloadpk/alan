@@ -117,3 +117,7 @@ nbproject
 .idea
 .node_history
 .env
+*.njsproj
+.ntvs_analysis.dat
+typings
+.vs
