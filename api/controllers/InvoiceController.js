@@ -1,3 +1,4 @@
+/* global Invoice */
 /* global sails */
 /**
  * InvoiceController
@@ -66,7 +67,7 @@ module.exports = {
       };
 
       // insert the object into the DB
-      invoice.create(invoice).exec(function (err, created) {
+      Invoice.create(invoice).exec(function (err, created) {
         if (err) {
           // log the error
           log.error(err);
