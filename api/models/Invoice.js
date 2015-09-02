@@ -36,11 +36,13 @@ module.exports = {
       type: "float",
       required: true
     },
-
-    /*
-     * Notification settings
-     */
-
+    btcAddress:{
+      type: "string",
+      required:true
+    },
+    transactionId:{
+      type: "string",
+    },
     // notification settings
     notificationUrl: {
       type: "string"
@@ -50,27 +52,23 @@ module.exports = {
       type: "integer",
       defaultsTo: 3
     },
-    // TODO
+    confirmations: {
+      type: "integer",
+      defaultsTo: 0
+    },
     redirectUrl: {
       type: "string"
     },
-
-    /*
-     * Item metadata
-     */
-
     // item description
     itemDesc: {
       type: "string",
       size: "100"
     },
-
     // others
     physical: {
       type: "boolean",
       defaultsTo: false
     },
-
     // buyer details
     buyerName: {
       type: "string",
@@ -97,12 +95,11 @@ module.exports = {
     buyerPhone: {
       type: "integer"
     },
-
     // status of invoice i.e confirmed
     status: {
-      type: "string"
+      type: "string",
+      defaultsTo: "unpaid"
     },
-
     // exception for paidOver or paidPartial, or false
     exception: {
       type: "boolean"

@@ -6,16 +6,17 @@
  * @description :: Server-side logic for managing invoices
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
-
-var coinbase = sails.config.coinbase;
+var wallet = sails.config.coinbase;
 var redis = sails.config.redis;
 var log = sails.log;
+var kue = require('kue');
+var WebSocket = require('ws');
+var ws = new WebSocket('wss://ws.chain.com/v2/notifications');
+var log = sails.log;
+var queue = kue.createQueue();
 
 module.exports = {
   new: function (req, res) {
-
-    log.silly('recieved a new request', req.body);
-
     // if no price is sent
     if (!req.body.price) {
       // reply with a 400 error saying that 'price' is required
@@ -24,7 +25,6 @@ module.exports = {
         success: false,
         message: "'price' is required."
       });
-
       // log the failure and drop out of the function
       return log.verbose('Invoice unsuccessful', {
         missing: "price",
@@ -32,12 +32,10 @@ module.exports = {
         payload: req.body
       });
     }
-
     // if no currency is sent, assume it is PKR
     if (!req.body.currency) {
       req.body.currency = "USD";
     }
-
     var rate;
     // assign rate the value of the currency called
     switch (req.body.currency) {
@@ -50,40 +48,81 @@ module.exports = {
       default:
         rate = 'ratePKR';
     }
-
-    log.silly(rate);
     // get the rate from memory
     redis.get(rate, function (err, rateCurrent) {
       if (err) log.error("rateUSD fetch unsuccessful", err);
       var amount = parseFloat(req.body.price) / rateCurrent;
-      log.silly("RATE CURRENT");
-      log.silly(rateCurrent);
       // create an invoice object
-      var invoice = {
-        "price": parseFloat(req.body.price),
-        "currency": req.body.currency,
-        "rate": rateCurrent,
-        "amount": amount
-      };
-
-      // insert the object into the DB
-      Invoice.create(invoice).exec(function (err, created) {
-        if (err) {
-          // log the error
-          log.error(err);
-          // reply with a 500 error
-          res.status(500);
-          return res.json({
-            success: false,
-            message: "Internal server error"
-          });
-        }
-        log.debug("Created invoice: " + created.id);
-        // respond with the amount
-        res.json({
-          "amount": created.amount
-        });
+      wallet.createAddress({
+        "callback_url": '',
+        "label": "first blood"
+      }, function (err, newBtcAddress) {
+        if (err) log.error(err);
+        createInvoice(newBtcAddress);
       });
+      function createInvoice(newBtcAddress) {
+        var btcAddress = newBtcAddress.address;
+        var invoice = {
+          "price": parseFloat(req.body.price),
+          "currency": req.body.currency,
+          "rate": rateCurrent,
+          "amount": amount,
+          "btcAddress": btcAddress
+        };
+        Invoice.create(invoice).exec(function (err, invoice) {
+          if (err) {
+            // log the error
+            log.error(err);
+            // reply with a 500 error
+            res.status(500);
+            return res.json({
+              success: false,
+              message: "Internal server error"
+            });
+          }
+          log.debug("Created invoice: " + invoice.id);
+          // respond with the amount
+          res.json({
+            "invoiceId": invoice.id,
+            "amount": invoice.amount,
+            "address": btcAddress
+          }); 
+          // create a object for blockchain address subs   
+          var reqWs = {
+            type: "address",
+            address: btcAddress,
+            block_chain: "bitcoin"
+          };
+          // log BTC address
+          log.silly("BTC Address is : " + btcAddress);
+          // subscribe to block chain address notifications
+          ws.send(JSON.stringify(reqWs));
+          ws.on('message', function (ev) {
+            // log block chain notification
+            var x = (JSON.parse(ev));
+            if (x.payload.type === "address") {
+              if (x.payload.address === btcAddress) {
+                var hash = x.payload.transaction_hash;
+                // log transaction hash
+                log.silly("Transaction hash : " + x.payload.transaction_hash);
+                // create confirmation job in kue
+                var job = queue.create('confirmation', {
+                  transHash: hash,
+                  btcAddress: btcAddress
+                }).priority('high').save(function (err) {
+                  if (err) log.error("Kue job error : " + err);
+                  else log.silly("Job id : " + job.id)
+                });
+              }
+            } else {
+              {
+                // log heartbeat
+                log.silly(x.payload);
+              }
+            }
+          });
+        });
+      }
     });
   }
 };

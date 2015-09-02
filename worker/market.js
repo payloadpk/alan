@@ -24,9 +24,9 @@ module.exports.contRate = function() {
 
     wBTC = valBTC / volBTC;
 
-    log.silly("cumulative volume of bitcoin", volBTC);
-    log.silly("value of bitcoin in USD", valBTC);
-    log.silly("value per bitcoin", wBTC);
+    //log.silly("cumulative volume of bitcoin", volBTC);
+    //log.silly("value of bitcoin in USD", valBTC);
+    //log.silly("value per bitcoin", wBTC);
     redis.set("rateUSD", wBTC);
 
   });
