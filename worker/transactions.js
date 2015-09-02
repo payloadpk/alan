@@ -1,3 +1,4 @@
+/* global sails */
 var ws = sails.config.blockchain;
 module.exports.trans = function(){
   var log = sails.log;
