@@ -58,9 +58,9 @@ module.exports = {
         "label": "first blood"
       }, function (err, newBtcAddress) {
         if (err) log.error(err);
-        creatInvoice(newBtcAddress);
+        createInvoice(newBtcAddress);
       });
-      function creatInvoice(newBtcAddress) {
+      function createInvoice(newBtcAddress) {
         var btcAddress = newBtcAddress.address;
         var invoice = {
           "price": parseFloat(req.body.price),
